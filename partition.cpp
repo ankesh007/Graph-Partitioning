@@ -30,6 +30,7 @@ int main(int argc,char **argv)
 	graph.resize(vertices+1);
 	printf("%d %d\n",vertices,edges);
 	
+
 	for(int i=1;i<=vertices;i++){
 		char *s;
 		fgets(s,vertices*6,stdin);
