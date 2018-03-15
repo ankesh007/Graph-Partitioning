@@ -19,6 +19,7 @@ void print_pair(pair<int,int> p)
 }
 
 vector<vector<pii > >  graph;
+int vertices,edges,processors;
 char temp[Maxn];
 
 void printOutput(int vertices,int edges)
@@ -41,7 +42,7 @@ int main(int argc,char **argv)
 	// freopen(argv[2],"w",stdout);
 	
 	
-	int vertices,edges;
+	
 	cin>>vertices>>edges;
 	graph.resize(vertices+1);
 	cin.getline(temp,sizeof(temp));
