@@ -11,6 +11,7 @@ typedef pair<int,int> pii;
 #define y second
 #define endl "\n"
 
+const int Maxn=6e6;
    
 void print_pair(pair<int,int> p)
 {
@@ -18,32 +19,29 @@ void print_pair(pair<int,int> p)
 }
 
 vector<vector<pii > >  graph;
+char temp[Maxn];
 
 int main(int argc,char **argv)
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
 	freopen(argv[1],"r",stdin);
 	// freopen(argv[2],"w",stdout);
 	
+	
 	int vertices,edges;
-	
-	scanf("%d %d",&vertices,&edges);
+	cin>>vertices>>edges;
 	graph.resize(vertices+1);
-	printf("%d %d\n",vertices,edges);
-	
+	cout<<vertices<<" "<<edges<<endl;
+	cin.getline(temp,sizeof(temp));
 
 	for(int i=1;i<=vertices;i++){
-		char *s;
-		fgets(s,vertices*6,stdin);
-		std::stringstream stream(s);
-		printf("%d\n",i);
-		while(1) {
-			int neighbour;
-			stream >> neighbour;
-			if(!stream)
-				break;
+		cin.getline(temp,sizeof(temp));
+		std::stringstream stream(temp);
+		int neighbour;
+		while(stream>>neighbour) {
 			graph[i].pb({neighbour,1});
-			// printf("%d \n",neighbour);
 		}
-		printf("\n");
+		cout<<graph[i].size()<<endl;
 	} 
 }
