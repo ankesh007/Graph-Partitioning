@@ -21,6 +21,18 @@ void print_pair(pair<int,int> p)
 vector<vector<pii > >  graph;
 char temp[Maxn];
 
+void printOutput(int vertices,int edges)
+{
+	cout<<vertices<<" "<<edges<<endl;
+	for(int i=1;i<=vertices;i++)
+	{
+		int lim=graph[i].size();
+		for(int j=0;j<lim;j++)
+			cout<<" "<<graph[i][j].x;
+		cout<<endl;
+	}
+}
+
 int main(int argc,char **argv)
 {
 	ios::sync_with_stdio(false);
@@ -32,7 +44,6 @@ int main(int argc,char **argv)
 	int vertices,edges;
 	cin>>vertices>>edges;
 	graph.resize(vertices+1);
-	cout<<vertices<<" "<<edges<<endl;
 	cin.getline(temp,sizeof(temp));
 
 	for(int i=1;i<=vertices;i++){
@@ -42,6 +53,5 @@ int main(int argc,char **argv)
 		while(stream>>neighbour) {
 			graph[i].pb({neighbour,1});
 		}
-		cout<<graph[i].size()<<endl;
-	} 
+	}
 }
