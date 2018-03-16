@@ -19,10 +19,11 @@ void print_pair(pair<int,int> p)
 }
 
 vector<vector<pii > >  graph;
-int vertices,edges,processors;
+int vertices,edges;
+int partitions;
 char temp[Maxn];
 
-void printOutput(int vertices,int edges)
+void printOutput()
 {
 	cout<<vertices<<" "<<edges<<endl;
 	for(int i=1;i<=vertices;i++)
@@ -34,15 +35,8 @@ void printOutput(int vertices,int edges)
 	}
 }
 
-int main(int argc,char **argv)
+void parseInput()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	freopen(argv[1],"r",stdin);
-	// freopen(argv[2],"w",stdout);
-	
-	
-	
 	cin>>vertices>>edges;
 	graph.resize(vertices+1);
 	cin.getline(temp,sizeof(temp));
@@ -55,4 +49,28 @@ int main(int argc,char **argv)
 			graph[i].pb({neighbour,1});
 		}
 	}
+}
+
+void naiveSolution()
+{
+	int counter=0;
+	for(int i=1;i<=vertices;i++)
+	{
+		cout<<counter<<" ";
+		counter++;
+		counter%=partitions;
+	}
+	cout<<endl;
+}
+
+int main(int argc,char **argv)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	freopen(argv[1],"r",stdin);
+	freopen(argv[2],"w",stdout);
+	partitions=atoi(argv[3]);	
+	parseInput();
+	naiveSolution();
+	// printOutput();
 }
