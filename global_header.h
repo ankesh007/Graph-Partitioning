@@ -9,6 +9,8 @@ typedef long double ld ;
 typedef pair<int,int> pii;
 typedef vector<int> vi;
 typedef vector<pii> vpi;
+typedef vector<vi> vvi;
+typedef vector<vpi> vvpi;
 
 #define long long long int
 #define mp make_pair
