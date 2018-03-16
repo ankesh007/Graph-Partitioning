@@ -31,7 +31,6 @@ void parseInput()
 		int neighbour;
 		while(stream>>neighbour) {
 			graph[i].pb(neighbour);
-			graph[neighbour].pb(i);
 		}
 	}
 }
@@ -75,7 +74,6 @@ vvi EquiPartition(vi &vertex_set)
 				continue;
 			int neighbour=m[itr];
 			tempEdgeGraph[i].pb({neighbour,1});
-			tempEdgeGraph[neighbour].pb({i,1});
 		}
 	}
 
