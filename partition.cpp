@@ -14,7 +14,7 @@ void printOutput()
 	{
 		int lim=graph[i].size();
 		for(int j=0;j<lim;j++)
-			cout<<" "<<graph[i][j].x;
+			cout<<" "<<graph[i][j];
 		cout<<endl;
 	}
 }
@@ -30,7 +30,7 @@ void parseInput()
 		std::stringstream stream(temp);
 		int neighbour;
 		while(stream>>neighbour) {
-			graph[i].pb({neighbour,1});
+			graph[i].pb(neighbour);
 		}
 	}
 }
@@ -56,5 +56,4 @@ int main(int argc,char **argv)
 	partitions=atoi(argv[3]);	
 	parseInput();
 	naiveSolution();
-	// printOutput();
 }

@@ -7,6 +7,9 @@
 using namespace std;
 typedef long double ld ;
 typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<pii> vpi;
+
 #define long long long int
 #define mp make_pair
 #define pb push_back
@@ -16,7 +19,7 @@ typedef pair<int,int> pii;
 
 const int Maxn=6e6;
 extern int vertices,edges,partitions;
-extern vector<vector<pii > >  graph;
+extern vector<vi> graph;
 
 void print_pair(pair<int,int> p);
 void printOutput();
