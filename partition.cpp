@@ -1,26 +1,10 @@
-#include <bits/stdc++.h>
-#include <omp.h>
-
-typedef long double ld ;
-using namespace std;
-typedef pair<int,int> pii;
-#define long long long int
-#define mp make_pair
-#define pb push_back
-#define x first
-#define y second
-#define endl "\n"
-
-const int Maxn=6e6;
+#include "global_header.h"
    
 void print_pair(pair<int,int> p)
 {
 	cout<<p.x<<" "<<p.y<<endl;
 }
 
-vector<vector<pii > >  graph;
-int vertices,edges;
-int partitions;
 char temp[Maxn];
 
 void printOutput()
