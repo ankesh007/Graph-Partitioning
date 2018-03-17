@@ -9,7 +9,11 @@ void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &par
 	partition1.pb(x);
 	matching[x]=1;
 	partition_weight+=vertex_weight[x];
-	int lim=(vertices>>1);
+	int total_lim=0;
+	for(auto itr:vertex_weight)
+		total_lim+=itr;
+
+	int lim=(total_lim>>1);
 	while(partition_weight<lim)
 	{
 		int min_edgecut=0;

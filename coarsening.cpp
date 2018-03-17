@@ -18,7 +18,6 @@ void printCoarsenedGraph(vector<vvi> vertexMapGraph,vector<vvpi> edgeMapGraph,vv
 				cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
 		}
 	}
-
 }
 
 void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new_graph,vvi &new_vector_set,vi &new_vertex_weight)
@@ -82,4 +81,5 @@ void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new
 	{
 		new_graph[itr.x.x].pb({itr.x.y,itr.y});
 	}
+	// cout<<"Return Coarsening"<<endl;
 }

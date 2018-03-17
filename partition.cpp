@@ -66,11 +66,13 @@ vvi EquiPartition(vi &vertex_set)
 	tempEdgeGraph.resize(set_size);
 
 	map<int,int> m;
+	vi revMap(set_size,0);
 
 	for(int i=0;i<set_size;i++)
 	{
 		tempVertexGraph[i].pb(vertex_set[i]);
 		m[vertex_set[i]]=i;
+		revMap[i]=vertex_set[i];
 	}
 
 	for(int i=0;i<set_size;i++)
@@ -127,6 +129,10 @@ vvi EquiPartition(vi &vertex_set)
 		partition1=newPartition1;
 		partition2=newPartition2;
 	}
+	for(int i=0;i<partition1.size();i++)
+		partition1[i]=revMap[partition1[i]];
+	for(int i=0;i<partition2.size();i++)
+		partition2[i]=revMap[partition2[i]];	
 	finalPartition.pb(partition1);
 	finalPartition.pb(partition2);
 	// for(auto itr:finalPartition)
@@ -136,7 +142,6 @@ vvi EquiPartition(vi &vertex_set)
 	// 	cout<<endl;
 	// }
 	return finalPartition;
-
 }
 
 vvi solver(vi &vertex_set,int toPartition)
@@ -156,12 +161,14 @@ vvi solver(vi &vertex_set,int toPartition)
 	{
 		return temp_partition;
 	}
+
 	// for(auto itr:temp_partition)
 	// {
 	// 	for(auto itr2:itr)
 	// 		cout<<itr2<<" ";
 	// 	cout<<endl;
 	// }
+	// cout<<"Before"<<endl;
 
 	#pragma omp parallel
 	{
@@ -173,6 +180,12 @@ vvi solver(vi &vertex_set,int toPartition)
 
 	for(auto itr:smallerPartition2)
 		smallerPartition1.pb(itr);
+	// for(auto itr:smallerPartition1)
+	// {
+	// 	for(auto itr2:itr)
+	// 		cout<<itr2<<" ";
+	// 	cout<<endl;
+	// }
 	return smallerPartition1;
 }
 
