@@ -3,12 +3,14 @@
 int IDEAL_ITERATIONS=20;
 int KL_ITERATIONS=3;
 
-void update_neighbour(vi &gain,vvpi &graph,vi whichPartition,int partid)
+void update_neighbour(vi &gain,vvpi &new_graph,vi whichPartition,int partid)
 {
 	gain[partid]=0;
 
-	for(auto itr:graph[partid])
+	for(auto itr:new_graph[partid])
 	{
+		// cout<<"Begin"<<endl;
+		// print_pair(itr);
 		if(whichPartition[partid]==whichPartition[itr.x])
 		{
 			gain[itr.x]-=2*itr.y;
@@ -19,12 +21,14 @@ void update_neighbour(vi &gain,vvpi &graph,vi whichPartition,int partid)
 			gain[itr.x]+=2*itr.y;
 			gain[partid]+=itr.y;
 		}
+		// cout<<"End"<<endl;
 	}
 }
 
 void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &partition1,vi &partition2,vi &new_partition1,vi &new_partition2)
 {
-	cout<<"Hey decoarsen"<<endl;
+	// cout<<"Hey decoarsen"<<endl;
+	// return ;
 	int pw1=partition1.size();
 	int pw2=partition2.size();
 	int s=new_graph.size();
@@ -54,6 +58,9 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 	int nwp2=new_partition2.size();
 	vector<int> gain_part(s,0);
 
+	// cout<<"Hey2"<<endl;
+	// return;
+
 	for(int i=0;i<s;i++)
 	{
 		int ss=new_graph[i].size();
@@ -63,27 +70,32 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 			int r=new_graph[i][j].first;
 			if(whichPartition[r]==whichPartition[i])
 			{
-				gain-=graph[i][r];
+				gain-=new_graph[i][r].y;
 			}
 			else
 			{
-				gain+=graph[i][r];
+				gain+=new_graph[i][r].y;
 			}
 		}
 		gain_part[i]=gain;
 	}
+
 	
 	vi isSwapped(s,0);
 	vi affected;
 	vi swp;
-	cout<<"Mid decoarsen"<<endl;
+	// cout<<"Mid decoarsen"<<endl;
+	int KL_iteration=0;
 
-	while(true)
+	while(KL_iteration<KL_ITERATIONS)
 	{
+		KL_iteration++;
 		int losing=0;
 
 		while(true)
 		{
+			// cout<<"Hi"<<endl;
+			// fflush(stdout);
 			int max_gain=-1e9;
 			int part_id=-1;
 
@@ -102,6 +114,7 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 					}
 				}
 			}
+
 			else
 			{
 				for(int i=0;i<nwp2;i++)
@@ -117,34 +130,46 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 					}
 				}
 			}
+			// cout<<"After else"<<endl;
+			if(part_id!=-1)
+			{			
+				if(max_gain<0)
+				{
+					losing=losing+1;
+				}
+				else{
+					losing=0;
+					swp.clear();
+				}
+				isSwapped[part_id]=1;
+				swp.pb(part_id);
+				affected.pb(part_id);
+				whichPartition[part_id]=1-whichPartition[part_id];
 
-			if(max_gain<0)
-			{
-				losing=losing+1;
-			}
-			else{
-				losing=0;
-				swp.clear();
-			}
-			isSwapped[part_id]=1;
-			swp.pb(part_id);
-			affected.pb(part_id);
-			whichPartition[part_id]=1-whichPartition[part_id];
 
-			if(whichPartition[part_id])
-			{
-				vertWeightIn0-=(new_vertex_weight[part_id]);
-				vertWeightIn1+=(new_vertex_weight[part_id]);
-			}
-			else
-			{
-				vertWeightIn0+=(new_vertex_weight[part_id]);
-				vertWeightIn1-=(new_vertex_weight[part_id]);
-			}
-			
-			update_neighbour(gain_part,new_graph,whichPartition,part_id);
+				if(whichPartition[part_id])
+				{
+					vertWeightIn0-=(new_vertex_weight[part_id]);
+					vertWeightIn1+=(new_vertex_weight[part_id]);
+				}
+				else
+				{
+					vertWeightIn0+=(new_vertex_weight[part_id]);
+					vertWeightIn1-=(new_vertex_weight[part_id]);
+				}
+				// cout<<"Before Update "<<endl;
+				// int kkk=0;
 
-			if(losing>=IDEAL_ITERATIONS)
+				// for(auto itr:new_graph)
+				// {
+				// 	cout<<kkk<<endl;kkk++;
+				// 	for(auto itr2:itr)
+				// 		print_pair(itr2);
+				// }
+				
+				update_neighbour(gain_part,new_graph,whichPartition,part_id);
+			}
+			if(losing>=IDEAL_ITERATIONS || part_id==-1)
 			{
 				int x=swp.size();
 				for(int i=x-1;i>=0;i--)
@@ -159,6 +184,9 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 				break;
 			}
 		}
+
+			// cout<<"Hey3"<<endl;
+			// return;
 		new_partition1.resize(0);
 		new_partition2.resize(0);
 		for(int i=0;i<s;i++)
@@ -168,5 +196,8 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 			else
 				new_partition1.pb(i);
 		}
+		pw1=new_partition1.size();
+		pw2=new_partition2.size();
 	}
+	cout<<"Return Deco"<<endl;
 }

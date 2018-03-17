@@ -17,7 +17,6 @@ typedef vector<vpi> vvpi;
 #define pb push_back
 #define x first
 #define y second
-#define endl "\n"
 
 const int Maxn=1e7;
 extern int vertices,edges,partitions;

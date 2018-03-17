@@ -116,16 +116,27 @@ vvi EquiPartition(vi &vertex_set)
 	// }
 	// cout<<endl;
 	// printCoarsenedGraph(vertexMapGraph,edgeMapGraph,vertexWeight);
-	
+	// cout<<"Hi After GGGP"<<endl;
+
 	for(int i=k-1;i>=0;i--)
 	{
 		vi newPartition1,newPartition2;
 		decoarsen(vertexMapGraph[i+1],edgeMapGraph[i],vertexWeight[i],partition1,partition2,newPartition1,newPartition2);
+		// cout<<i<<endl;
+		// return finalPartition;
 		partition1=newPartition1;
 		partition2=newPartition2;
 	}
 	finalPartition.pb(partition1);
 	finalPartition.pb(partition2);
+	// for(auto itr:finalPartition)
+	// {
+	// 	for(auto itr2:itr)
+	// 		cout<<itr2<<" ";
+	// 	cout<<endl;
+	// }
+	return finalPartition;
+
 }
 
 vvi solver(vi &vertex_set,int toPartition)
@@ -145,6 +156,12 @@ vvi solver(vi &vertex_set,int toPartition)
 	{
 		return temp_partition;
 	}
+	// for(auto itr:temp_partition)
+	// {
+	// 	for(auto itr2:itr)
+	// 		cout<<itr2<<" ";
+	// 	cout<<endl;
+	// }
 
 	#pragma omp parallel
 	{
