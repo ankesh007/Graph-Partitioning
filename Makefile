@@ -1,12 +1,16 @@
-part:partition.cpp
-	g++ -std=c++11 -fopenmp partition.cpp -o partition
+LIBS=-std=c++11 -fopenmp
+SRCS=coarsening.cpp global_header.cpp partition.cpp
+HEADER=global_header.h
+LIBS=-std=c++11 -fopenmp
 
-check:checker.cpp
-	g++ -std=c++11 -fopenmp checker.cpp -o checker
+# naive_partition:partition.cpp $(HEADER)
+# 	g++	$(LIBS) -I . partition.cpp -o $@
 
-complete:global_header.cpp partition.cpp global_header.h coarsening.cpp
-	g++ -std=c++11 -fopenmp -I . global_header.cpp partition.cpp coarsening.cpp -o partition
+checker:checker.cpp $(HEADER)
+	g++ $(LIBS) checker.cpp -o $@
 
+partition:$(SRCS) $(HEADER)
+	g++ $(LIBS) -I . $(SRCS) -o $@
 
-complete_mac:global_header.cpp partition.cpp global_header.h coarsening.cpp
-	g++-7 -std=c++11 -fopenmp -I . global_header.cpp partition.cpp coarsening.cpp -o partition
+complete_mac:$(SRCS) $(HEADER)
+	g++-7 $(LIBS) -I . $(SRCS) -o partition

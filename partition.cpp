@@ -160,11 +160,10 @@ int main(int argc,char **argv)
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	freopen(argv[1],"r",stdin);
-	// freopen(argv[2],"w",stdout);
+	freopen(argv[2],"w",stdout);
 	partitions=atoi(argv[3]);	
 	parseInput();
-	cout<<"hey from Main"<<endl;
-	// naiveSolution();
+	
 	vi vertex_set;
 	vertex_set.resize(vertices);
 	for(int i=1;i<=vertices;i++)

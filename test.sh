@@ -3,11 +3,8 @@
 executable1="partition"
 executable2="checker"
 
-rm $executable1
-rm $executable2
-
-make complete
-make check
+make $executable1
+make $executable2
 
 ./$executable1 $1 $2 $3
 ./$executable2 $1 $2 $3
