@@ -1,119 +1,172 @@
 #include "global_header.h"
 
+int IDEAL_ITERATIONS=20;
+int KL_ITERATIONS=3;
+
+void update_neighbour(vi &gain,vvpi &graph,vi whichPartition,int partid)
+{
+	gain[partid]=0;
+
+	for(auto itr:graph[partid])
+	{
+		if(whichPartition[partid]==whichPartition[itr.x])
+		{
+			gain[itr.x]-=2*itr.y;
+			gain[partid]-=itr.y;
+		}
+		else
+		{
+			gain[itr.x]+=2*itr.y;
+			gain[partid]+=itr.y;
+		}
+	}
+}
+
 void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &partition1,vi &partition2,vi &new_partition1,vi &new_partition2)
 {
+	cout<<"Hey decoarsen"<<endl;
 	int pw1=partition1.size();
 	int pw2=partition2.size();
 	int s=new_graph.size();
-	vector<int> matching(s,0);
+	vector<int> whichPartition(s,0);
+	int vertWeightIn1=0;
+	int vertWeightIn0=0;
 	for(int i=0;i<pw1;i++)
 	{
-		for(int j=0;j<old_vector_set[i];j++)
+		int ii=partition1[i];
+		for(int j=0;j<old_vector_set[ii].size();j++)
 		{
-			new_partition1.pb(old_vector_set[i][j]);
+			new_partition1.pb(old_vector_set[ii][j]);
+			vertWeightIn0+=new_vertex_weight[old_vector_set[ii][j]];
 		}
 	}
 	for(int i=0;i<pw2;i++)
 	{
-		for(int j=0;j<old_vector_set[i];j++)
+		int ii=partition2[i];		
+		for(int j=0;j<old_vector_set[ii].size();j++)
 		{
-			new_partition2.pb(old_vector_set[i][j]);
-			matching[old_vector_set[i][j]]=1;
+			new_partition2.pb(old_vector_set[ii][j]);
+			whichPartition[old_vector_set[ii][j]]=1;
+			vertWeightIn1+=new_vertex_weight[old_vector_set[ii][j]];
 		}
 	}
 	int nwp1=new_partition1.size();
 	int nwp2=new_partition2.size();
-	vector<int> gain_part1(npw1,0);
-	vector<int> gain_part2(npw2,0);
-	vector<int> matching_part1(npw1,0);
-	vector<int> matching_part2(npw2,0);
-	vpi swap; 
-	for(int i=0;i<nwp1;i++)
+	vector<int> gain_part(s,0);
+
+	for(int i=0;i<s;i++)
 	{
-		int i1=new_partition1[i];
-		int ss=new_graph[i1].size();
+		int ss=new_graph[i].size();
 		int gain=0;
 		for(int j=0;j<ss;j++)
 		{
-			int r=new_graph[i1][ss].first;
-			if(matching[r]==matching[i1])
+			int r=new_graph[i][j].first;
+			if(whichPartition[r]==whichPartition[i])
 			{
-				gain-=graph[i1][r];
+				gain-=graph[i][r];
 			}
 			else
 			{
-				gain+=graph[i1][r];
+				gain+=graph[i][r];
 			}
 		}
-		gain_part1[i]=gain;
+		gain_part[i]=gain;
 	}
-	for(int i=0;i<nwp2;i++)
-	{
-		int i1=new_partition2[i];
-		int ss=new_graph[i1].size();
-		int gain=0;
-		for(int j=0;j<ss;j++)
-		{
-			int r=new_graph[i1][ss].first;
-			if(matching[r]==matching[i1])
-			{
-				gain-=graph[i1][r];
-			}
-			else
-			{
-				gain+=graph[i1][r];
-			}
-		}
-		gain_part2[i]=gain;
-	}
+	
+	vi isSwapped(s,0);
+	vi affected;
+	vi swp;
+	cout<<"Mid decoarsen"<<endl;
+
 	while(true)
 	{
 		int losing=0;
-		int max_gain1=-1e9;
-		int part1_id=0;
-		for(int i=0;i<nwp1;i++)
-		{
-			if(matching_part1[i]==0)
-			{
-				if(gain_part1[i]>max_gain1)
-				{
-					max_gain1=gain_part1[i];
-					part1_id=i;
-				}
-			}
-		}
-		if(max_gain1<0)
-		{
-			losing=losing+1;
-		}
-		else{
-			losing=0;
-		}
-		matching_part1[i]==1;
-		// partition2.pb(insert);
-		// // partition1.erase(partition1.begin()+i);
-		// for(int i=0;i<)
-		int max_gain2=-1e9;
-		int part2_id=0;
-		for(int i=0;i<nwp2;i++)
-		{
-			if(matching_part2[i]==0)
-			{
-				if(gain_part2[i]>max_gain2)
-				{
-					max_gain2=gain_part2[i];
-					part2_id=new_partition2[i];
-				}
-			}
-		}
-		if(max_gain2<0)
-		{
-			losing=losing+1;
-		}
-		else{
-			losing=0;
-		}
 
+		while(true)
+		{
+			int max_gain=-1e9;
+			int part_id=-1;
+
+			if(vertWeightIn0>vertWeightIn1)
+			{
+				for(int i=0;i<nwp1;i++)
+				{
+					int ii=new_partition1[i];
+					if(isSwapped[ii]==0)
+					{
+						if(gain_part[ii]>max_gain)
+						{
+							max_gain=gain_part[ii];
+							part_id=ii;
+						}
+					}
+				}
+			}
+			else
+			{
+				for(int i=0;i<nwp2;i++)
+				{
+					int ii=new_partition2[i];
+					if(isSwapped[ii]==0)
+					{
+						if(gain_part[ii]>max_gain)
+						{
+							max_gain=gain_part[ii];
+							part_id=ii;
+						}
+					}
+				}
+			}
+
+			if(max_gain<0)
+			{
+				losing=losing+1;
+			}
+			else{
+				losing=0;
+				swp.clear();
+			}
+			isSwapped[part_id]=1;
+			swp.pb(part_id);
+			affected.pb(part_id);
+			whichPartition[part_id]=1-whichPartition[part_id];
+
+			if(whichPartition[part_id])
+			{
+				vertWeightIn0-=(new_vertex_weight[part_id]);
+				vertWeightIn1+=(new_vertex_weight[part_id]);
+			}
+			else
+			{
+				vertWeightIn0+=(new_vertex_weight[part_id]);
+				vertWeightIn1-=(new_vertex_weight[part_id]);
+			}
+			
+			update_neighbour(gain_part,new_graph,whichPartition,part_id);
+
+			if(losing>=IDEAL_ITERATIONS)
+			{
+				int x=swp.size();
+				for(int i=x-1;i>=0;i--)
+				{
+					whichPartition[swp[i]]=1-whichPartition[swp[i]];
+					update_neighbour(gain_part,new_graph,whichPartition,swp[i]);
+				}
+				swp.clear();
+				for(auto itr:affected)
+					isSwapped[itr]=0;
+				affected.clear();
+				break;
+			}
+		}
+		new_partition1.resize(0);
+		new_partition2.resize(0);
+		for(int i=0;i<s;i++)
+		{
+			if(whichPartition[i])
+				new_partition2.pb(i);
+			else
+				new_partition1.pb(i);
+		}
 	}
-
 }

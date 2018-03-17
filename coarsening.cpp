@@ -1,5 +1,26 @@
 #include "global_header.h"
 
+void printCoarsenedGraph(vector<vvi> vertexMapGraph,vector<vvpi> edgeMapGraph,vvi vertexWeight)
+{
+	int kk=vertexWeight.size();
+	for(int k=0;k<=kk;k++)
+	{	
+		for(int i=0;i<vertexMapGraph[k].size();i++)
+		{
+			cout<<i<<"Weight:"<<vertexWeight[k][i]<<": ";
+			for(auto itr:vertexMapGraph[k][i])
+				cout<<itr<<" ";
+			cout<<endl;
+		}
+		for(int i=0;i<edgeMapGraph[k].size();i++)
+		{
+			for(auto itr:edgeMapGraph[k][i])
+				cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
+		}
+	}
+
+}
+
 void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new_graph,vvi &new_vector_set,vi &new_vertex_weight)
 {
 	cout<<"Hey from Coarsening"<<endl;

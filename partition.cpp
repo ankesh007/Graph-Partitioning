@@ -1,7 +1,7 @@
 #include "global_header.h"
    
 int ITERATIONS=100;
-int VERTEX_SET_SIZE=1;
+int VERTEX_SET_SIZE=2;
 
 void print_pair(pair<int,int> p)
 {
@@ -52,7 +52,7 @@ void naiveSolution()
 
 vvi EquiPartition(vi &vertex_set)
 {
-	vvi hey;
+	vvi finalPartition;
 	vector<vvi> vertexMapGraph;
 	vector<vvpi> edgeMapGraph;
 	vvi vertexWeight;
@@ -103,34 +103,29 @@ vvi EquiPartition(vi &vertex_set)
 	}
 	vi partition1;
 	vi partition2;
-	gggp(edgeMapGraph[0],vertexMapGraph[0],vertexWeight[0],partition1,partition2);
-	int kk=k;
-	for(int i=0;i<partition1.size();i++)
-	{
-		cout<<partition1[i]<<" ";
-	}
-	cout<<endl;
-	for(int i=0;i<partition2.size();i++)
-	{
-		cout<<partition2[i]<<" ";
-	}
-	cout<<endl;
-	// for(int k=0;k<=kk;k++)
-	// {	
-	// 	for(int i=0;i<vertexMapGraph[k].size();i++)
-	// 	{
-	// 		cout<<i<<"Weight:"<<vertexWeight[k][i]<<": ";
-	// 		for(auto itr:vertexMapGraph[k][i])
-	// 			cout<<itr<<" ";
-	// 		cout<<endl;
-	// 	}
-	// 	for(int i=0;i<edgeMapGraph[k].size();i++)
-	// 	{
-	// 		for(auto itr:edgeMapGraph[k][i])
-	// 			cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
-	// 	}
+
+	gggp(edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k],partition1,partition2);
+	// for(int i=0;i<partition1.size();i++)
+	// {
+	// 	cout<<partition1[i]<<" ";
 	// }
-	return hey;
+	// cout<<endl;
+	// for(int i=0;i<partition2.size();i++)
+	// {
+	// 	cout<<partition2[i]<<" ";
+	// }
+	// cout<<endl;
+	// printCoarsenedGraph(vertexMapGraph,edgeMapGraph,vertexWeight);
+	
+	for(int i=k-1;i>=0;i--)
+	{
+		vi newPartition1,newPartition2;
+		decoarsen(vertexMapGraph[i+1],edgeMapGraph[i],vertexWeight[i],partition1,partition2,newPartition1,newPartition2);
+		partition1=newPartition1;
+		partition2=newPartition2;
+	}
+	finalPartition.pb(partition1);
+	finalPartition.pb(partition2);
 }
 
 vvi solver(vi &vertex_set,int toPartition)
@@ -148,7 +143,6 @@ vvi solver(vi &vertex_set,int toPartition)
 
 	if(temp_partition.size()<2)
 	{
-		// cout<<temp_partition.size()<<endl;
 		return temp_partition;
 	}
 
@@ -181,5 +175,13 @@ int main(int argc,char **argv)
 		vertex_set[i-1]=i;
 
 	vvi partitioned_graph;
+	cout<<"Enter Solver"<<endl;
 	partitioned_graph=solver(vertex_set,partitions);
+
+	for(auto itr:partitioned_graph)
+	{
+		for(auto itr2:itr)
+			cout<<itr2<<" ";
+		cout<<endl;
+	}
 }

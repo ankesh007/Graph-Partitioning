@@ -1,4 +1,5 @@
 #include "global_header.h"
+
 void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &partition2)
 {
 	int partition_weight=0;
@@ -6,23 +7,20 @@ void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &par
 	vector<int>  matching(s,0);
 	int x=rand()%(s);
 	partition1.pb(x);
-	// graph.erase(graph.begin()+x);
 	matching[x]=1;
 	partition_weight+=vertex_weight[x];
-	// min_edgecut=0
-	// // first=True;
-	// min_index=-1;
-	while(partition_weight<vertices/2)
+	int lim=(vertices>>1);
+	while(partition_weight<lim)
 	{
 		int min_edgecut=0;
-		// first=True;
 		int min_index=-1;
 		for(int i=0;i<s;i++)
 		{
 			int edge_cut=0;
 			if(matching[i]==0)
 			{
-				for(int j=0;j<graph[i].size();j++)
+				int len=graph[i].size();
+				for(int j=0;j<len;j++)
 				{
 					if(matching[graph[i][j].first]==1)
 					{
