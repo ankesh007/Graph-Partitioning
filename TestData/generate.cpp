@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-
+using namespace std;
 int main()
 {
 	int n;
@@ -12,7 +12,8 @@ int main()
 		{
 			if(i==j)
 				continue;
-			
+			cout<<j<<" ";
 		}
+		cout<<endl;
 	}
 }

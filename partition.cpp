@@ -163,7 +163,8 @@ int main(int argc,char **argv)
 	freopen(argv[2],"w",stdout);
 	partitions=atoi(argv[3]);	
 	parseInput();
-	
+	// naiveSolution();
+	// return 0;
 	vi vertex_set;
 	vertex_set.resize(vertices);
 	for(int i=1;i<=vertices;i++)
