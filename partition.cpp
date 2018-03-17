@@ -1,5 +1,8 @@
 #include "global_header.h"
    
+int ITERATIONS=100;
+int VERTEX_SET_SIZE=100;
+
 void print_pair(pair<int,int> p)
 {
 	cout<<p.x<<" "<<p.y<<endl;
@@ -52,13 +55,16 @@ vvi EquiPartition(vi &vertex_set)
 	vvi hey;
 	vector<vvi> vertexMapGraph;
 	vector<vvpi> edgeMapGraph;
+	vvi vertexWeight;
 
 	int set_size=vertex_set.size();
 	vvi tempVertexGraph;
 	vvpi tempEdgeGraph;
 
+	vi tempVertexCount(set_size,1);
 	tempVertexGraph.resize(set_size);
 	tempEdgeGraph.resize(set_size);
+
 	map<int,int> m;
 
 	for(int i=0;i<set_size;i++)
@@ -80,51 +86,49 @@ vvi EquiPartition(vi &vertex_set)
 
 	vertexMapGraph.pb(tempVertexGraph);
 	edgeMapGraph.pb(tempEdgeGraph);
+	vertexWeight.pb(tempVertexCount);
+
 	int k=0;
 
-	while(k<10 && vertexMapGraph[k].size()>4)
+	while(k<ITERATIONS && vertexMapGraph[k].size()>VERTEX_SET_SIZE)
 	{
-		cout<<"*********"<<k<<"**************"<<endl;
-		for(int i=0;i<vertexMapGraph[k].size();i++)
-		{
-			cout<<i<<": ";
-			for(auto itr:vertexMapGraph[k][i])
-				cout<<itr<<" ";
-			cout<<endl;
-		}
-		for(int i=0;i<edgeMapGraph[k].size();i++)
-		{
-			for(auto itr:edgeMapGraph[k][i])
-				cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
-		}
-		
+		// cout<<"*********"<<k<<"**************"<<endl;
+		// for(int i=0;i<vertexMapGraph[k].size();i++)
+		// {
+		// 	cout<<i<<": ";
+		// 	for(auto itr:vertexMapGraph[k][i])
+		// 		cout<<itr<<" ";
+		// 	cout<<endl;
+		// }
+		// for(int i=0;i<edgeMapGraph[k].size();i++)
+		// {
+		// 	for(auto itr:edgeMapGraph[k][i])
+		// 		cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
+		// }
 		k=k+1;
 		tempVertexGraph.resize(0);
 		tempEdgeGraph.resize(0);
-		coarsen(edgeMapGraph[k-1],vertexMapGraph[k-1],tempEdgeGraph,tempVertexGraph);
+		coarsen(edgeMapGraph[k-1],vertexMapGraph[k-1],vertexWeight[k-1],tempEdgeGraph,tempVertexGraph,tempVertexCount);
 		vertexMapGraph.pb(tempVertexGraph);
 		edgeMapGraph.pb(tempEdgeGraph);
 	}
-		for(int i=0;i<vertexMapGraph[k].size();i++)
-		{
-			cout<<i<<": ";
-			for(auto itr:vertexMapGraph[k][i])
-				cout<<itr<<" ";
-			cout<<endl;
-		}
-		for(int i=0;i<edgeMapGraph[k].size();i++)
-		{
-			for(auto itr:edgeMapGraph[k][i])
-				cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
-		}
-	
-	// cout<<"Hey from EquiPartition"<<endl;
+		// for(int i=0;i<vertexMapGraph[k].size();i++)
+		// {
+		// 	cout<<i<<": ";
+		// 	for(auto itr:vertexMapGraph[k][i])
+		// 		cout<<itr<<" ";
+		// 	cout<<endl;
+		// }
+		// // for(int i=0;i<edgeMapGraph[k].size();i++)
+		// {
+		// 	for(auto itr:edgeMapGraph[k][i])
+		// 		cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
+		// }
 	return hey;
 }
 
 vvi solver(vi &vertex_set,int toPartition)
 {
-	cout<<"Hey from Solver "<<toPartition<<endl;
 	if(toPartition==1)
 	{
 		vvi ans;
@@ -160,7 +164,7 @@ int main(int argc,char **argv)
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	freopen(argv[1],"r",stdin);
-	freopen(argv[2],"w",stdout);
+	// freopen(argv[2],"w",stdout);
 	partitions=atoi(argv[3]);	
 	parseInput();
 	// naiveSolution();
