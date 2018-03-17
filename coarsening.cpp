@@ -1,6 +1,6 @@
 #include "global_header.h"
 
-void coarsen(vvpi &old_graph,vvi &old_vector_set,vvpi &new_graph,vvi &new_vector_set)
+void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new_graph,vvi &new_vector_set,vi &new_vertex_weight)
 {
 	cout<<"Hey from Coarsening"<<endl;
 	int s=old_graph.size();
@@ -30,6 +30,7 @@ void coarsen(vvpi &old_graph,vvi &old_vector_set,vvpi &new_graph,vvi &new_vector
 			a.pb(x);
 			new_vector_set.pb(a),
 			mapping[x]=map_counter++;
+			new_vertex_weight.pb(old_vertex_weight[x]);
 			continue;
 		}
 
@@ -39,7 +40,8 @@ void coarsen(vvpi &old_graph,vvi &old_vector_set,vvpi &new_graph,vvi &new_vector
 		a.pb(max_id);
 		new_vector_set.pb(a);
 		mapping[x]=map_counter;
-		mapping[max_id]=map_counter++;																																													
+		mapping[max_id]=map_counter++;
+		new_vertex_weight.pb(old_vertex_weight[x]+old_vertex_weight[max_id]);																																													
 	}
 
 	new_graph.resize(new_vector_set.size());
