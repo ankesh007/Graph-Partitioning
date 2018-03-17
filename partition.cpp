@@ -49,6 +49,7 @@ void naiveSolution()
 
 vvi EquiPartition(vi &vertex_set)
 {
+	vvi hey;
 	vector<vvi> vertexMapGraph;
 	vector<vvpi> edgeMapGraph;
 
@@ -81,8 +82,22 @@ vvi EquiPartition(vi &vertex_set)
 	edgeMapGraph.pb(tempEdgeGraph);
 	int k=0;
 
-	while(vertexMapGraph[k].size()<100)
+	while(k<10 && vertexMapGraph[k].size()>4)
 	{
+		cout<<"*********"<<k<<"**************"<<endl;
+		for(int i=0;i<vertexMapGraph[k].size();i++)
+		{
+			cout<<i<<": ";
+			for(auto itr:vertexMapGraph[k][i])
+				cout<<itr<<" ";
+			cout<<endl;
+		}
+		for(int i=0;i<edgeMapGraph[k].size();i++)
+		{
+			for(auto itr:edgeMapGraph[k][i])
+				cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
+		}
+		
 		k=k+1;
 		tempVertexGraph.resize(0);
 		tempEdgeGraph.resize(0);
@@ -90,20 +105,42 @@ vvi EquiPartition(vi &vertex_set)
 		vertexMapGraph.pb(tempVertexGraph);
 		edgeMapGraph.pb(tempEdgeGraph);
 	}
+		for(int i=0;i<vertexMapGraph[k].size();i++)
+		{
+			cout<<i<<": ";
+			for(auto itr:vertexMapGraph[k][i])
+				cout<<itr<<" ";
+			cout<<endl;
+		}
+		for(int i=0;i<edgeMapGraph[k].size();i++)
+		{
+			for(auto itr:edgeMapGraph[k][i])
+				cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
+		}
+	
+	// cout<<"Hey from EquiPartition"<<endl;
+	return hey;
 }
 
 vvi solver(vi &vertex_set,int toPartition)
 {
+	cout<<"Hey from Solver "<<toPartition<<endl;
 	if(toPartition==1)
 	{
 		vvi ans;
-		vvi.pb(vertex_set);
-		return vvi;
+		ans.pb(vertex_set);
+		return ans;
 	}
 
 	vvi temp_partition;
 	temp_partition=EquiPartition(vertex_set);
 	vvi smallerPartition1,smallerPartition2;
+
+	if(temp_partition.size()<2)
+	{
+		cout<<temp_partition.size()<<endl;
+		return temp_partition;
+	}
 
 	#pragma omp parallel
 	{
@@ -123,14 +160,15 @@ int main(int argc,char **argv)
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	freopen(argv[1],"r",stdin);
-	freopen(argv[2],"w",stdout);
+	// freopen(argv[2],"w",stdout);
 	partitions=atoi(argv[3]);	
 	parseInput();
+	cout<<"hey from Main"<<endl;
 	// naiveSolution();
 	vi vertex_set;
-	temp.resize(vertices);
+	vertex_set.resize(vertices);
 	for(int i=1;i<=vertices;i++)
-		vertex_set[i]=i;
+		vertex_set[i-1]=i;
 
 	vvi partitioned_graph;
 	partitioned_graph=solver(vertex_set,partitions);
