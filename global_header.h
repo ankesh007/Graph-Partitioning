@@ -26,4 +26,5 @@ extern vector<vi> graph;
 void print_pair(pair<int,int> p);
 void printOutput();
 void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new_graph,vvi &new_vector_set,vi &new_vertex_weight);
+void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &partition2);
 #endif

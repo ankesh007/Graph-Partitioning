@@ -1,5 +1,5 @@
 LIBS=-std=c++11 -fopenmp
-SRCS=coarsening.cpp global_header.cpp partition.cpp
+SRCS=coarsening.cpp global_header.cpp partition.cpp gggp.cpp
 HEADER=global_header.h
 LIBS=-std=c++11 -fopenmp
 

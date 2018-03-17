@@ -101,22 +101,35 @@ vvi EquiPartition(vi &vertex_set)
 		edgeMapGraph.pb(tempEdgeGraph);
 		vertexWeight.pb(tempVertexCount);
 	}
+	vi partition1;
+	vi partition2;
+	gggp(edgeMapGraph[0],vertexMapGraph[0],vertexWeight[0],partition1,partition2);
 	int kk=k;
-	for(int k=0;k<=kk;k++)
-	{	
-		for(int i=0;i<vertexMapGraph[k].size();i++)
-		{
-			cout<<i<<"Weight:"<<vertexWeight[k][i]<<": ";
-			for(auto itr:vertexMapGraph[k][i])
-				cout<<itr<<" ";
-			cout<<endl;
-		}
-		for(int i=0;i<edgeMapGraph[k].size();i++)
-		{
-			for(auto itr:edgeMapGraph[k][i])
-				cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
-		}
+	for(int i=0;i<partition1.size();i++)
+	{
+		cout<<partition1[i]<<" ";
 	}
+	cout<<endl;
+	for(int i=0;i<partition2.size();i++)
+	{
+		cout<<partition2[i]<<" ";
+	}
+	cout<<endl;
+	// for(int k=0;k<=kk;k++)
+	// {	
+	// 	for(int i=0;i<vertexMapGraph[k].size();i++)
+	// 	{
+	// 		cout<<i<<"Weight:"<<vertexWeight[k][i]<<": ";
+	// 		for(auto itr:vertexMapGraph[k][i])
+	// 			cout<<itr<<" ";
+	// 		cout<<endl;
+	// 	}
+	// 	for(int i=0;i<edgeMapGraph[k].size();i++)
+	// 	{
+	// 		for(auto itr:edgeMapGraph[k][i])
+	// 			cout<<i<<" "<<itr.x<<" "<<itr.y<<endl;
+	// 	}
+	// }
 	return hey;
 }
 
