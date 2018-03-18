@@ -184,12 +184,12 @@ int main(int argc,char **argv)
 	ofstream myfile;
 	myfile.open(argv[2]);
 	// freopen(argv[2],"w",stdout);
+	partitions=atoi(argv[3]);	
 	if((partitions&(partitions-1)))
 	{
 		cout<<"Number of Partitions not a Power of 2"<<endl;
 		return 0;
 	}
-	partitions=atoi(argv[3]);	
 	parseInput();
 	// cout<<"Parsed Input"<<endl;
 	// naiveSolution();
