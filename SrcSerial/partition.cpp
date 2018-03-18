@@ -91,7 +91,7 @@ vvi EquiPartition(vi &vertex_set)
 	vertexWeight.pb(tempVertexCount);
 
 	int k=0;
-
+	cout<<"****Coarsening*****"<<endl;
 	while(k<ITERATIONS && vertexMapGraph[k].size()>VERTEX_SET_SIZE)
 	{
 		k=k+1;
@@ -102,31 +102,19 @@ vvi EquiPartition(vi &vertex_set)
 		vertexMapGraph.pb(tempVertexGraph);
 		edgeMapGraph.pb(tempEdgeGraph);
 		vertexWeight.pb(tempVertexCount);
-		cout<<vertexMapGraph[k].size()<<endl;
+		cout<<k<<" "<<vertexMapGraph[k].size()<<endl;
 	}
 	vi partition1;
 	vi partition2;
 
 	gggp(edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k],partition1,partition2);
-	// for(int i=0;i<partition1.size();i++)
-	// {
-	// 	cout<<partition1[i]<<" ";
-	// }
-	// cout<<endl;
-	// for(int i=0;i<partition2.size();i++)
-	// {
-	// 	cout<<partition2[i]<<" ";
-	// }
-	// cout<<endl;
-	// printCoarsenedGraph(vertexMapGraph,edgeMapGraph,vertexWeight);
-	// cout<<"Hi After GGGP"<<endl;
 
+	cout<<"****UnCoarsening*****"<<endl;
 	for(int i=k-1;i>=0;i--)
 	{
+		cout<<i<<endl;
 		vi newPartition1,newPartition2;
 		decoarsen(vertexMapGraph[i+1],edgeMapGraph[i],vertexWeight[i],partition1,partition2,newPartition1,newPartition2);
-		// cout<<i<<endl;
-		// return finalPartition;
 		partition1=newPartition1;
 		partition2=newPartition2;
 	}
@@ -155,9 +143,9 @@ vvi solver(vi &vertex_set,int toPartition)
 	}
 
 	vvi temp_partition;
-	cout<<"Enter EquiPartition"<<endl;
+	// cout<<"Enter EquiPartition"<<endl;
 	temp_partition=EquiPartition(vertex_set);
-	cout<<"End EquiPartition"<<endl;
+	// cout<<"End EquiPartition"<<endl;
 	vvi smallerPartition1,smallerPartition2;
 
 	if(temp_partition.size()<2)
@@ -173,9 +161,9 @@ vvi solver(vi &vertex_set,int toPartition)
 	// }
 	// cout<<"Before"<<endl;
 	// omp_set_numthreads(1);
-	cout<<"Enter Parallel"<<endl;
+	// cout<<"Enter Parallel"<<endl;
 
-	#pragma omp parallel num_threads(1)
+	#pragma omp parallel num_threads(2)
 	{
 		#pragma omp single nowait
 			smallerPartition2=solver(temp_partition[0],(toPartition>>1));

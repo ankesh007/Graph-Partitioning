@@ -35,3 +35,4 @@ relative/path/to/dir/anotherfile
 *.zip
 
 *.out
+*ignore/

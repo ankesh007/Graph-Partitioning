@@ -1,0 +1,20 @@
+int IDEAL_ITERATIONS=20;
+int KL_ITERATIONS=5;
+float disturbanceThresh=0.05;
+int ITERATION_LIM=1000;
+
+132
+
+
+2000--374
+
+1000-> 4 parts -> 292
+1000-> 8 parts -> 695
+
+
+int IDEAL_ITERATIONS=20;
+int KL_ITERATIONS=5;
+float disturbanceThresh=0.045;
+int ITERATION_LIM=1100;
+
+2->116 / 907 / 146

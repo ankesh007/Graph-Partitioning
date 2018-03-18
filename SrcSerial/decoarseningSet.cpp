@@ -1,9 +1,9 @@
 #include "global_header.h"
 
 int IDEAL_ITERATIONS=20;
-int KL_ITERATIONS=5;
-float disturbanceThresh=0.05;
-int ITERATION_LIM=1000;
+int KL_ITERATIONS=6;
+float disturbanceThresh=0.0495;
+int ITERATION_LIM=1200;
 
 // set<pii,Comparator> gainSet0,gainSet1;
 
@@ -39,7 +39,7 @@ void update_neighbour(vi &gain,vvpi &new_graph,vi &whichPartition,vi &isSwapped,
 
 void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &partition1,vi &partition2,vi &new_partition1,vi &new_partition2)
 {
-	cout<<"Hey decoarsen"<<endl;
+	// cout<<"Hey decoarsen"<<endl;
 	set<pii,Comparator> gainSet0,gainSet1;
 	int pw1=partition1.size();
 	int pw2=partition2.size();
@@ -244,5 +244,5 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 		pw2=new_partition2.size();
 		// cout<<pw1<<" "<<pw2<<" "<<"LOW"<<endl;
 	}
-	cout<<"Return Deco"<<endl;
+	// cout<<"Return Deco"<<endl;
 }
