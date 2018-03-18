@@ -154,7 +154,9 @@ vvi solver(vi &vertex_set,int toPartition)
 	}
 
 	vvi temp_partition;
+	// cout<<"Enter EquiPartition"<<endl;
 	temp_partition=EquiPartition(vertex_set);
+	// cout<<"End EquiPartition"<<endl;
 	vvi smallerPartition1,smallerPartition2;
 
 	if(temp_partition.size()<2)
@@ -169,8 +171,9 @@ vvi solver(vi &vertex_set,int toPartition)
 	// 	cout<<endl;
 	// }
 	// cout<<"Before"<<endl;
+	// omp_set_numthreads(1);
 
-	#pragma omp parallel
+	#pragma omp parallel num_threads(2)
 	{
 		#pragma omp single nowait
 			smallerPartition2=solver(temp_partition[0],(toPartition>>1));
@@ -194,9 +197,10 @@ int main(int argc,char **argv)
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	freopen(argv[1],"r",stdin);
-	// freopen(argv[2],"w",stdout);
+	freopen(argv[2],"w",stdout);
 	partitions=atoi(argv[3]);	
 	parseInput();
+	// cout<<"Parsed Input"<<endl;
 	// naiveSolution();
 	// return 0;
 	vi vertex_set;
@@ -205,13 +209,22 @@ int main(int argc,char **argv)
 		vertex_set[i-1]=i;
 
 	vvi partitioned_graph;
-	cout<<"Enter Solver"<<endl;
+	// cout<<"Enter Solver"<<endl;
 	partitioned_graph=solver(vertex_set,partitions);
+	vi partition_numb(vertices,0);
+	int x=partitioned_graph.size();
 
-	for(auto itr:partitioned_graph)
+	for(int i=0;i<x;i++)
 	{
-		for(auto itr2:itr)
-			cout<<itr2<<" ";
-		cout<<endl;
+		for(auto itr2:partitioned_graph[i])
+		{
+			partition_numb[itr2]=i;
+			
+		}
+			// cout<<itr2<<" ";
+		// cout<<endl;
 	}
+	for(int i=0;i<vertices;i++)
+		cout<<partition_numb[i]<<" ";
+	cout<<endl;
 }

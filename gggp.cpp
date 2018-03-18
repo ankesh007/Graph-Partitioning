@@ -2,6 +2,7 @@
 
 void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &partition2)
 {
+	// cout<<"Enter GGGP"<<endl;
 	int partition_weight=0;
 	int s=graph.size();
 	vector<int>  matching(s,0);
@@ -56,4 +57,5 @@ void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &par
 			partition2.pb(i);
 		}
 	}
+	// cout<<"Exit GGGP"<<endl;	
 }

@@ -1,16 +1,28 @@
+HEADER_DIR=.
+OBJDIR=obj
 LIBS=-std=c++11 -fopenmp
 SRCS=coarsening.cpp global_header.cpp partition.cpp gggp.cpp decoarsening.cpp
-HEADER=global_header.h
-LIBS=-std=c++11 -fopenmp
+DEPS = $(wildcard $(HEADER_DIR)/*.h)
+# OBJ =coarsening.o global_header.o partition.o gggp.o decoarsening.o
+OBJS = $(patsubst %.cpp, $(OBJDIR)/%.o, $(SRCS))
 
-# naive_partition:partition.cpp $(HEADER)
-# 	g++	$(LIBS) -I . partition.cpp -o $@
-
-checker:checker.cpp $(HEADER)
+checker:checker.cpp $(DEPS)
 	g++ $(LIBS) checker.cpp -o $@
 
-partition:$(SRCS) $(HEADER)
-	g++ $(LIBS) -I . $(SRCS) -o $@
+$(OBJDIR)/%.o: %.cpp $(DEPS) | $(OBJDIR)
+	g++ $(LIBS) -c -I . -o $@ $< 
 
-complete_mac:$(SRCS) $(HEADER)
+partition: $(OBJS) 
+	g++ $(LIBS) -I . $^ -o $@
+
+complete_mac:$(SRCS) $(DEPS)
 	g++-7 $(LIBS) -I . $(SRCS) -o partition
+
+clean:
+	rm -rf ./$(OBJDIR)
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
+
+# naive_partition:partition.cpp $(DEPS)
+# 	g++	$(LIBS) -I . partition.cpp -o $@

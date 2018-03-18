@@ -80,22 +80,23 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 		gain_part[i]=gain;
 	}
 
-	
 	vi isSwapped(s,0);
 	vi affected;
 	vi swp;
 	// cout<<"Mid decoarsen"<<endl;
 	int KL_iteration=0;
+	int toto=0;
 
 	while(KL_iteration<KL_ITERATIONS)
 	{
 		KL_iteration++;
 		int losing=0;
 
-		while(true)
+		while(toto<1000)
 		{
+			toto++;
+			// cout<<toto<<endl;
 			// cout<<"Hi"<<endl;
-			// fflush(stdout);
 			int max_gain=-1e9;
 			int part_id=-1;
 
@@ -133,7 +134,7 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 			// cout<<"After else"<<endl;
 			if(part_id!=-1)
 			{			
-				if(max_gain<0)
+				if(max_gain<=0)
 				{
 					losing=losing+1;
 				}
