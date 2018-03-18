@@ -1,18 +1,33 @@
 #include "global_header.h"
 
-int IDEAL_ITERATIONS=20;
-int KL_ITERATIONS=3;
+int IDEAL_ITERATIONS=40;
+int KL_ITERATIONS=4;
+float disturbanceThresh=0.05;
 
-void update_neighbour(vi &gain,vvpi &new_graph,vi &whichPartition,int partid)
+struct Comparator
+{
+	bool operator()(pii a,pii b)
+	{
+		if(a.x!=b.x)
+			return a.x>b.x;
+		return a.y>b.y;
+	}
+};
+// set<pii,Comparator> gainSet0,gainSet1;
+
+void update_neighbour(vi &gain,vvpi &new_graph,vi &whichPartition,vi &isSwapped,int partid,set<pii,Comparator> &gainSet0,set<pii,Comparator> &gainSet1)
 {
 	gain[partid]=0;
 
 	for(auto itr:new_graph[partid])
 	{
-		// cout<<"Begin"<<endl;
-		// print_pair(itr);
+		if(whichPartition[itr.x])
+			gainSet1.erase({gain[itr.x],itr.x});
+		else
+			gainSet0.erase({gain[itr.x],itr.x});
+
 		if(whichPartition[partid]==whichPartition[itr.x])
-		{
+		{				
 			gain[itr.x]-=2*itr.y;
 			gain[partid]-=itr.y;
 		}
@@ -21,14 +36,19 @@ void update_neighbour(vi &gain,vvpi &new_graph,vi &whichPartition,int partid)
 			gain[itr.x]+=2*itr.y;
 			gain[partid]+=itr.y;
 		}
-		// cout<<"End"<<endl;
+		if(isSwapped[itr.x])
+			continue;
+		if(whichPartition[itr.x])
+			gainSet1.insert({gain[itr.x],itr.x});
+		else
+			gainSet0.insert({gain[itr.x],itr.x});
 	}
 }
 
 void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &partition1,vi &partition2,vi &new_partition1,vi &new_partition2)
 {
-	// cout<<"Hey decoarsen"<<endl;
-	// return ;
+	cout<<"Hey decoarsen"<<endl;
+	set<pii,Comparator> gainSet0,gainSet1;
 	int pw1=partition1.size();
 	int pw2=partition2.size();
 	int s=new_graph.size();
@@ -78,6 +98,10 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 			}
 		}
 		gain_part[i]=gain;
+		if(whichPartition[i])
+			gainSet1.insert({gain,i});
+		else
+			gainSet0.insert({gain,i});
 	}
 
 	vi isSwapped(s,0);
@@ -85,6 +109,7 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 	vi swp;
 	// cout<<"Mid decoarsen"<<endl;
 	int KL_iteration=0;
+	int disturbance=(int)(disturbanceThresh*(vertWeightIn0+vertWeightIn1));
 
 	while(KL_iteration<KL_ITERATIONS)
 	{
@@ -92,49 +117,57 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 		KL_iteration++;
 		int losing=0;
 
-		while(toto<1000)
+		while(true)
 		{
 			toto++;
 			// cout<<toto<<endl;
-			// cout<<"Hi"<<endl;
-			int max_gain=-1e9;
-			int part_id=-1;
+			int max_gain=-1e9,max_gain0=-1e9,max_gain1=-1e9;
+			int part_id=-1,part_id0=-1,part_id1=-1;
 
-			if(vertWeightIn0>vertWeightIn1)
+			if(!gainSet0.empty())
 			{
-				for(int i=0;i<nwp1;i++)
-				{
-					int ii=new_partition1[i];
-					if(isSwapped[ii]==0)
-					{
-						if(gain_part[ii]>max_gain)
-						{
-							max_gain=gain_part[ii];
-							part_id=ii;
-						}
-					}
-				}
+				auto itr=*(gainSet0.begin());
+				max_gain0=itr.x;
+				part_id0=itr.y;
 			}
-
+			if(!gainSet1.empty())
+			{
+				auto itr=*(gainSet1.begin());
+				max_gain1=itr.x;
+				part_id1=itr.y;
+			}
+			if(vertWeightIn0>vertWeightIn1+disturbance)
+			{
+				max_gain=max_gain0;
+				part_id=part_id0;
+			}
+			else if(vertWeightIn1>vertWeightIn0+disturbance)
+			{
+				max_gain=max_gain1;
+				part_id=part_id1;
+			}
 			else
 			{
-				for(int i=0;i<nwp2;i++)
+				if(max_gain0>max_gain1)
 				{
-					int ii=new_partition2[i];
-					if(isSwapped[ii]==0)
-					{
-						if(gain_part[ii]>max_gain)
-						{
-							max_gain=gain_part[ii];
-							part_id=ii;
-						}
-					}
+					max_gain=max_gain0;
+					part_id=part_id0;
 				}
-			}
-			// cout<<"After else"<<endl;
+				else
+				{
+					max_gain=max_gain1;
+					part_id=part_id1;				
+				}
+			}			
+			
 			if(part_id!=-1)
-			{			
-				if(max_gain<=0)
+			{
+				if(whichPartition[part_id])
+					gainSet1.erase({max_gain,part_id});
+				else
+					gainSet0.erase({max_gain,part_id});
+
+				if(max_gain<0)
 				{
 					losing=losing+1;
 				}
@@ -168,7 +201,7 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 				// 		print_pair(itr2);
 				// }
 				
-				update_neighbour(gain_part,new_graph,whichPartition,part_id);
+				update_neighbour(gain_part,new_graph,whichPartition,isSwapped,part_id,gainSet0,gainSet1);
 			}
 			if(losing>=IDEAL_ITERATIONS || part_id==-1)
 			{
@@ -176,11 +209,17 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 				for(int i=x-1;i>=0;i--)
 				{
 					whichPartition[swp[i]]=1-whichPartition[swp[i]];
-					update_neighbour(gain_part,new_graph,whichPartition,swp[i]);
+					update_neighbour(gain_part,new_graph,whichPartition,isSwapped,swp[i],gainSet0,gainSet1);
 				}
 				swp.clear();
 				for(auto itr:affected)
+				{
+					if(whichPartition[itr])
+						gainSet1.insert({gain_part[itr],itr});
+					else
+						gainSet0.insert({gain_part[itr],itr});
 					isSwapped[itr]=0;
+				}
 				affected.clear();
 				break;
 			}
@@ -200,5 +239,5 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 		pw1=new_partition1.size();
 		pw2=new_partition2.size();
 	}
-	// cout<<"Return Deco"<<endl;
+	cout<<"Return Deco"<<endl;
 }

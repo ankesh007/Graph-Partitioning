@@ -197,7 +197,9 @@ int main(int argc,char **argv)
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	freopen(argv[1],"r",stdin);
-	freopen(argv[2],"w",stdout);
+	ofstream myfile;
+	myfile.open(argv[2]);
+	// freopen(argv[2],"w",stdout);
 	partitions=atoi(argv[3]);	
 	parseInput();
 	// cout<<"Parsed Input"<<endl;
@@ -225,6 +227,7 @@ int main(int argc,char **argv)
 		// cout<<endl;
 	}
 	for(int i=0;i<vertices;i++)
-		cout<<partition_numb[i]<<" ";
-	cout<<endl;
+		myfile<<partition_numb[i]<<" ";
+	myfile<<endl;
+	myfile.close();
 }
