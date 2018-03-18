@@ -144,13 +144,12 @@ vvi EquiPartition(vi &vertex_set)
 	return finalPartition;
 }
 
-vvi solver(vi &vertex_set,int toPartition)
+void solver(vi &vertex_set,int s,int e,vvi &finalPartitionList)
 {
-	if(toPartition==1)
+	if(s==e)
 	{
-		vvi ans;
-		ans.pb(vertex_set);
-		return ans;
+		finalPartitionList[s]=vertex_set;
+		return;
 	}
 
 	vvi temp_partition;
@@ -161,37 +160,19 @@ vvi solver(vi &vertex_set,int toPartition)
 
 	if(temp_partition.size()<2)
 	{
-		return temp_partition;
+		cout<<"Partitions not a Power of 2"<<endl;
+		exit(0);
 	}
 
-	// for(auto itr:temp_partition)
-	// {
-	// 	for(auto itr2:itr)
-	// 		cout<<itr2<<" ";
-	// 	cout<<endl;
-	// }
-	// cout<<"Before"<<endl;
-	// omp_set_numthreads(1);
-	// cout<<"Enter Parallel"<<endl;
-
+	int mid=(s+e)>>1;
 	#pragma omp parallel num_threads(2)
 	{
 		#pragma omp single nowait
-			smallerPartition2=solver(temp_partition[0],(toPartition>>1));
+			solver(temp_partition[0],s,mid,finalPartitionList);
 		#pragma omp single nowait
-			smallerPartition1=solver(temp_partition[1],(toPartition>>1));			
+			solver(temp_partition[1],mid+1,e,finalPartitionList);			
 	}
-	cout<<"Exit Parallel"<<endl;
-
-	for(auto itr:smallerPartition2)
-		smallerPartition1.pb(itr);
-	// for(auto itr:smallerPartition1)
-	// {
-	// 	for(auto itr2:itr)
-	// 		cout<<itr2<<" ";
-	// 	cout<<endl;
-	// }
-	return smallerPartition1;
+	// cout<<"Exit Parallel"<<endl;
 }
 
 int main(int argc,char **argv)
@@ -203,6 +184,11 @@ int main(int argc,char **argv)
 	ofstream myfile;
 	myfile.open(argv[2]);
 	// freopen(argv[2],"w",stdout);
+	if((partitions&(partitions-1)))
+	{
+		cout<<"Number of Partitions not a Power of 2"<<endl;
+		return 0;
+	}
 	partitions=atoi(argv[3]);	
 	parseInput();
 	// cout<<"Parsed Input"<<endl;
@@ -214,11 +200,12 @@ int main(int argc,char **argv)
 		vertex_set[i-1]=i;
 
 	vvi partitioned_graph;
+	partitioned_graph.resize(partitions);
 	// cout<<"Enter Solver"<<endl;
-	partitioned_graph=solver(vertex_set,partitions);
+	solver(vertex_set,0,partitions-1,partitioned_graph);
 	vi partition_numb(vertices+1,0);
 	// cout<<"Partitioned"<<endl;
-	int x=partitioned_graph.size();
+	int x=partitions;
 
 	for(int i=0;i<x;i++)
 	{
