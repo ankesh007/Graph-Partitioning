@@ -1,7 +1,7 @@
 #include "global_header.h"
    
-int ITERATIONS=100;
-int VERTEX_SET_SIZE=2;
+int ITERATIONS=1000;
+int VERTEX_SET_SIZE=100;
 
 void print_pair(pair<int,int> p)
 {
@@ -102,6 +102,7 @@ vvi EquiPartition(vi &vertex_set)
 		vertexMapGraph.pb(tempVertexGraph);
 		edgeMapGraph.pb(tempEdgeGraph);
 		vertexWeight.pb(tempVertexCount);
+		cout<<vertexMapGraph[k].size()<<endl;
 	}
 	vi partition1;
 	vi partition2;
@@ -196,6 +197,7 @@ int main(int argc,char **argv)
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	srand(time(NULL));
 	freopen(argv[1],"r",stdin);
 	ofstream myfile;
 	myfile.open(argv[2]);

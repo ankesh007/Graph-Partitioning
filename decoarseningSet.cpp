@@ -1,8 +1,9 @@
 #include "global_header.h"
 
-int IDEAL_ITERATIONS=40;
-int KL_ITERATIONS=4;
+int IDEAL_ITERATIONS=15;
+int KL_ITERATIONS=5;
 float disturbanceThresh=0.05;
+int ITERATION_LIM=10000000;
 
 struct Comparator
 {
@@ -113,13 +114,13 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 
 	while(KL_iteration<KL_ITERATIONS)
 	{
-		int toto=0;
+		int itertionCount=0;
 		KL_iteration++;
 		int losing=0;
 
 		while(true)
 		{
-			toto++;
+			itertionCount++;
 			// cout<<toto<<endl;
 			int max_gain=-1e9,max_gain0=-1e9,max_gain1=-1e9;
 			int part_id=-1,part_id0=-1,part_id1=-1;
@@ -203,7 +204,7 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 				
 				update_neighbour(gain_part,new_graph,whichPartition,isSwapped,part_id,gainSet0,gainSet1);
 			}
-			if(losing>=IDEAL_ITERATIONS || part_id==-1)
+			if(losing>=IDEAL_ITERATIONS || part_id==-1 || itertionCount>ITERATION_LIM)
 			{
 				int x=swp.size();
 				for(int i=x-1;i>=0;i--)
