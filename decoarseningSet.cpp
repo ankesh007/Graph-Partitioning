@@ -3,7 +3,7 @@
 int IDEAL_ITERATIONS=15;
 int KL_ITERATIONS=5;
 float disturbanceThresh=0.05;
-int ITERATION_LIM=10000000;
+int ITERATION_LIM=1000;
 
 // set<pii,Comparator> gainSet0,gainSet1;
 

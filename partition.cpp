@@ -1,6 +1,6 @@
 #include "global_header.h"
    
-int ITERATIONS=0;
+int ITERATIONS=50;
 int VERTEX_SET_SIZE=100;
 
 void print_pair(pair<int,int> p)

@@ -24,27 +24,38 @@ void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new
 {
 	// cout<<"Hey from Coarsening"<<endl;
 	int s=old_graph.size();
-	vector<int>  matching(s,0);
-	vector<int> mapping(s,0);
+	vi mapping(s,0);
 	int map_counter=0;
-
-	for(int x=0;x<s;x++)
+	vi randomArray(s,0);
+	vi revrandomArray(s,0);
+	int randomGenerator=s;
+	for(int i=0;i<s;i++)
 	{
-		if(matching[x]==1)
-			continue;
+		randomArray[i]=i;
+		revrandomArray[i]=i;
+	}
+
+	while(randomGenerator>0)
+	{
+		int rr=rand()%randomGenerator;
+		int x=randomArray[rr];
 
 		int max_weight=0;
 		int max_id;
 		int y=old_graph[x].size();
 		for(int i=0;i<y;i++)
 		{
-			if(matching[old_graph[x][i].first]==0 && old_graph[x][i].second>max_weight){
+			if(revrandomArray[old_graph[x][i].x]<randomGenerator && old_graph[x][i].second>max_weight){
 				max_id=old_graph[x][i].first;
 				max_weight=old_graph[x][i].second;
 			}
 		}
+		randomGenerator--;
+		swap(revrandomArray[x],revrandomArray[randomArray[randomGenerator]]);
+		swap(randomArray[rr],randomArray[randomGenerator]);
+		// revrandomArray[randomArray[rr]]=rr;
+		// revrandomArray[x]=randomGenerator;
 
-		matching[x]=1;
 		if(max_weight==0){
 			vector<int> a;
 			a.pb(x);
@@ -53,9 +64,14 @@ void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new
 			new_vertex_weight.pb(old_vertex_weight[x]);
 			continue;
 		}
+		randomGenerator--;
+		int pos=revrandomArray[max_id];
+		swap(revrandomArray[max_id],revrandomArray[randomArray[randomGenerator]]);
+		swap(randomArray[pos],randomArray[randomGenerator]);
+		// revrandomArray[randomArray[pos]]=pos;
+		// revrandomArray[max_id]=randomGenerator;
 
 		vector<int> a;
-		matching[max_id]=1;
 		a.pb(x);
 		a.pb(max_id);
 		new_vector_set.pb(a);
@@ -63,6 +79,7 @@ void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new
 		mapping[max_id]=map_counter++;
 		new_vertex_weight.pb(old_vertex_weight[x]+old_vertex_weight[max_id]);																																													
 	}
+	// cout<<mapping.size()<<" "<<map_counter<<endl;
 
 	new_graph.resize(new_vector_set.size());
 

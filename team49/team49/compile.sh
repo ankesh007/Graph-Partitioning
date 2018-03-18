@@ -1,0 +1,1 @@
+g++-6 -o main ass2.cpp -fopenmp 
