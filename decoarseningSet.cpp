@@ -1,6 +1,6 @@
 #include "global_header.h"
 
-int IDEAL_ITERATIONS=15;
+int IDEAL_ITERATIONS=20;
 int KL_ITERATIONS=5;
 float disturbanceThresh=0.05;
 int ITERATION_LIM=1000;
@@ -115,6 +115,7 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 			// cout<<toto<<endl;
 			int max_gain=-1e9,max_gain0=-1e9,max_gain1=-1e9;
 			int part_id=-1,part_id0=-1,part_id1=-1;
+			// cout<<vertWeightIn0<<" "<<vertWeightIn1<<" "<<disturbance<<endl;
 
 			if(!gainSet0.empty())
 			{
@@ -201,8 +202,19 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 				for(int i=x-1;i>=0;i--)
 				{
 					whichPartition[swp[i]]=1-whichPartition[swp[i]];
+					if(whichPartition[swp[i]])
+					{
+						vertWeightIn1+=new_vertex_weight[swp[i]];
+						vertWeightIn0-=new_vertex_weight[swp[i]];
+					}
+					else
+					{
+						vertWeightIn0+=new_vertex_weight[swp[i]];
+						vertWeightIn1-=new_vertex_weight[swp[i]];						
+					}
 					update_neighbour(gain_part,new_graph,whichPartition,isSwapped,swp[i],gainSet0,gainSet1);
 				}
+				
 				swp.clear();
 				for(auto itr:affected)
 				{
@@ -230,6 +242,7 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 		}
 		pw1=new_partition1.size();
 		pw2=new_partition2.size();
+		// cout<<pw1<<" "<<pw2<<" "<<"LOW"<<endl;
 	}
 	cout<<"Return Deco"<<endl;
 }

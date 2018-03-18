@@ -1,6 +1,6 @@
 #include "global_header.h"
    
-int ITERATIONS=50;
+int ITERATIONS=100;
 int VERTEX_SET_SIZE=100;
 
 void print_pair(pair<int,int> p)
@@ -155,9 +155,9 @@ vvi solver(vi &vertex_set,int toPartition)
 	}
 
 	vvi temp_partition;
-	// cout<<"Enter EquiPartition"<<endl;
+	cout<<"Enter EquiPartition"<<endl;
 	temp_partition=EquiPartition(vertex_set);
-	// cout<<"End EquiPartition"<<endl;
+	cout<<"End EquiPartition"<<endl;
 	vvi smallerPartition1,smallerPartition2;
 
 	if(temp_partition.size()<2)
@@ -173,14 +173,16 @@ vvi solver(vi &vertex_set,int toPartition)
 	// }
 	// cout<<"Before"<<endl;
 	// omp_set_numthreads(1);
+	cout<<"Enter Parallel"<<endl;
 
-	#pragma omp parallel num_threads(2)
+	#pragma omp parallel num_threads(1)
 	{
 		#pragma omp single nowait
 			smallerPartition2=solver(temp_partition[0],(toPartition>>1));
 		#pragma omp single nowait
 			smallerPartition1=solver(temp_partition[1],(toPartition>>1));			
 	}
+	cout<<"Exit Parallel"<<endl;
 
 	for(auto itr:smallerPartition2)
 		smallerPartition1.pb(itr);
@@ -215,7 +217,8 @@ int main(int argc,char **argv)
 	vvi partitioned_graph;
 	// cout<<"Enter Solver"<<endl;
 	partitioned_graph=solver(vertex_set,partitions);
-	vi partition_numb(vertices,0);
+	vi partition_numb(vertices+1,0);
+	// cout<<"Partitioned"<<endl;
 	int x=partitioned_graph.size();
 
 	for(int i=0;i<x;i++)
@@ -223,12 +226,12 @@ int main(int argc,char **argv)
 		for(auto itr2:partitioned_graph[i])
 		{
 			partition_numb[itr2]=i;
-			
-		}
 			// cout<<itr2<<" ";
+		}
+			cout<<partitioned_graph[i].size()<<" ";
 		// cout<<endl;
 	}
-	for(int i=0;i<vertices;i++)
+	for(int i=1;i<=vertices;i++)
 		myfile<<partition_numb[i]<<" ";
 	myfile<<endl;
 	myfile.close();

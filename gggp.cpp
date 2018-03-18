@@ -30,7 +30,7 @@ void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &par
 	}
 
 	int lim=(total_lim>>1);
-	while(partition_weight<lim)
+	while(partition_weight<lim && (!dijkstra.empty()))
 	{
 		auto itr=*(dijkstra.begin());
 		dijkstra.erase(itr);
