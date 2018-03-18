@@ -3,7 +3,6 @@ OBJDIR=obj
 LIBS=-std=c++11 -fopenmp
 SRCS=coarsening.cpp global_header.cpp partition.cpp gggp.cpp decoarseningSet.cpp
 DEPS = $(wildcard $(HEADER_DIR)/*.h)
-# OBJ =coarsening.o global_header.o partition.o gggp.o decoarsening.o
 OBJS = $(patsubst %.cpp, $(OBJDIR)/%.o, $(SRCS))
 
 checker:checker.cpp $(DEPS)
