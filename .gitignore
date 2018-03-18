@@ -36,3 +36,4 @@ relative/path/to/dir/anotherfile
 
 *.out
 *ignore/
+!*Makefile
