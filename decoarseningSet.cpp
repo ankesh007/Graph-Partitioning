@@ -82,11 +82,11 @@ void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &par
 			int r=new_graph[i][j].first;
 			if(whichPartition[r]==whichPartition[i])
 			{
-				gain-=new_graph[i][r].y;
+				gain-=new_graph[i][j].y;
 			}
 			else
 			{
-				gain+=new_graph[i][r].y;
+				gain+=new_graph[i][j].y;
 			}
 		}
 		gain_part[i]=gain;
