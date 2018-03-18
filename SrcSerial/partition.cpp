@@ -58,19 +58,26 @@ vvi EquiPartition(vi &vertex_set)
 	vvi vertexWeight;
 
 	int set_size=vertex_set.size();
-	vvi tempVertexGraph;
-	vvpi tempEdgeGraph;
+	vertexMapGraph.resize(1);
+	edgeMapGraph.resize(1);
+	vertexWeight.resize(1);
+	// vvi tempVertexGraph;
+	// vvpi tempEdgeGraph;
 
-	vi tempVertexCount(set_size,1);
-	tempVertexGraph.resize(set_size);
-	tempEdgeGraph.resize(set_size);
+	// vi tempVertexCount(set_size,1);
+	vertexWeight[0].resize(set_size,1);
+	edgeMapGraph[0].resize(set_size);
+	vertexMapGraph[0].resize(set_size);
+	// tempVertexGraph.resize(set_size);
+	// tempEdgeGraph.resize(set_size);
 
 	map<int,int> m;
 	vi revMap(set_size,0);
 
 	for(int i=0;i<set_size;i++)
 	{
-		tempVertexGraph[i].pb(vertex_set[i]);
+		// tempVertexGraph[i].pb(vertex_set[i]);
+		vertexMapGraph[0][i].pb(vertex_set[i]);
 		m[vertex_set[i]]=i;
 		revMap[i]=vertex_set[i];
 	}
@@ -82,26 +89,30 @@ vvi EquiPartition(vi &vertex_set)
 			if(m.find(itr)==m.end())
 				continue;
 			int neighbour=m[itr];
-			tempEdgeGraph[i].pb({neighbour,1});
+			edgeMapGraph[0][i].pb({neighbour,1});
+			// tempEdgeGraph[i].pb({neighbour,1});
 		}
 	}
 
-	vertexMapGraph.pb(tempVertexGraph);
-	edgeMapGraph.pb(tempEdgeGraph);
-	vertexWeight.pb(tempVertexCount);
+	// vertexMapGraph.pb(tempVertexGraph);
+	// edgeMapGraph.pb(tempEdgeGraph);
+	// vertexWeight.pb(tempVertexCount);
 
 	int k=0;
 	cout<<"****Coarsening*****"<<endl;
 	while(k<ITERATIONS && vertexMapGraph[k].size()>VERTEX_SET_SIZE)
 	{
 		k=k+1;
-		tempVertexGraph.resize(0);
-		tempEdgeGraph.resize(0);
-		tempVertexCount.resize(0);
-		coarsen(edgeMapGraph[k-1],vertexMapGraph[k-1],vertexWeight[k-1],tempEdgeGraph,tempVertexGraph,tempVertexCount);
-		vertexMapGraph.pb(tempVertexGraph);
-		edgeMapGraph.pb(tempEdgeGraph);
-		vertexWeight.pb(tempVertexCount);
+		edgeMapGraph.resize(k+1);
+		vertexMapGraph.resize(k+1);
+		vertexWeight.resize(k+1);
+		// tempVertexGraph.resize(0);
+		// tempEdgeGraph.resize(0);
+		// tempVertexCount.resize(0);
+		coarsen(edgeMapGraph[k-1],vertexMapGraph[k-1],vertexWeight[k-1],edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k]);
+		// vertexMapGraph.pb(tempVertexGraph);
+		// edgeMapGraph.pb(tempEdgeGraph);
+		// vertexWeight.pb(tempVertexCount);
 		cout<<k<<" "<<vertexMapGraph[k].size()<<endl;
 	}
 	vi partition1;
