@@ -5,15 +5,6 @@ int KL_ITERATIONS=5;
 float disturbanceThresh=0.05;
 int ITERATION_LIM=10000000;
 
-struct Comparator
-{
-	bool operator()(pii a,pii b)
-	{
-		if(a.x!=b.x)
-			return a.x>b.x;
-		return a.y>b.y;
-	}
-};
 // set<pii,Comparator> gainSet0,gainSet1;
 
 void update_neighbour(vi &gain,vvpi &new_graph,vi &whichPartition,vi &isSwapped,int partid,set<pii,Comparator> &gainSet0,set<pii,Comparator> &gainSet1)
