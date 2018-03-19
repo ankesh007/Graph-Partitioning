@@ -17,10 +17,12 @@ typedef vector<vpi> vvpi;
 #define pb push_back
 #define x first
 #define y second
+#define THREAD_LIM 64
 
 const int Maxn=1e7;
 extern int vertices,edges,partitions;
 extern vector<vi> graph;
+extern int availableThreads;
 
 void print_pair(pair<int,int> p);
 void printOutput();
@@ -28,6 +30,7 @@ void coarsen(vvpi &old_graph,vvi &old_vector_set,vi &old_vertex_weight,vvpi &new
 void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &partition2);
 void decoarsen(vvi &old_vector_set,vvpi &new_graph,vi &new_vertex_weight,vi &partition1,vi &partition2,vi &new_partition1,vi &new_partition2);
 void printCoarsenedGraph(vector<vvi> vertexMapGraph,vector<vvpi> edgeMapGraph,vvi vertexWeight);
+int getMoreThreads(int i);
 struct Comparator
 {
 	bool operator()(pii a,pii b)

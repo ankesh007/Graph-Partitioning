@@ -22,6 +22,25 @@ void printOutput()
 	}
 }
 
+int getMoreThreads(int requested)
+{
+	int sendThreads=0;
+	#pragma omp critical
+	{
+		sendThreads=min(availableThreads,requested);
+		availableThreads-=sendThreads;
+	}
+	return sendThreads;
+}
+
+void freeThreads(int number)
+{
+	#pragma omp critical
+	{
+		availableThreads+=number;
+	}
+}
+
 void parseInput()
 {
 	cin>>vertices>>edges;
@@ -165,13 +184,16 @@ void solver(vi &vertex_set,int s,int e,vvi &finalPartitionList)
 	}
 
 	int mid=(s+e)>>1;
-	#pragma omp parallel num_threads(2)
+	int response=getMoreThreads(1);
+	#pragma omp parallel num_threads(1+response)
 	{
 		#pragma omp single nowait
 			solver(temp_partition[0],s,mid,finalPartitionList);
 		#pragma omp single nowait
 			solver(temp_partition[1],mid+1,e,finalPartitionList);			
 	}
+	if(response)
+		freeThreads(response);
 	// cout<<"Exit Parallel"<<endl;
 }
 
