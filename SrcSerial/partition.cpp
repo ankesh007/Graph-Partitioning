@@ -3,59 +3,7 @@
 int ITERATIONS=100;
 int VERTEX_SET_SIZE=100;
 
-void print_pair(pair<int,int> p)
-{
-	cout<<p.x<<" "<<p.y<<endl;
-}
-
 char temp[Maxn];
-
-void printOutput()
-{
-	cout<<vertices<<" "<<edges<<endl;
-	for(int i=1;i<=vertices;i++)
-	{
-		int lim=graph[i].size();
-		for(int j=0;j<lim;j++)
-			cout<<" "<<graph[i][j];
-		cout<<endl;
-	}
-}
-
-int getMoreThreads(int requested)
-{
-	int sendThreads=0;
-	#pragma omp critical
-	{
-		sendThreads=min(availableThreads,requested);
-		availableThreads-=sendThreads;
-	}
-	return sendThreads;
-}
-
-void freeThreads(int number)
-{
-	#pragma omp critical
-	{
-		availableThreads+=number;
-	}
-}
-
-void parseInput()
-{
-	cin>>vertices>>edges;
-	graph.resize(vertices+1);
-	cin.getline(temp,sizeof(temp));
-
-	for(int i=1;i<=vertices;i++){
-		cin.getline(temp,sizeof(temp));
-		std::stringstream stream(temp);
-		int neighbour;
-		while(stream>>neighbour) {
-			graph[i].pb(neighbour);
-		}
-	}
-}
 
 void naiveSolution(ofstream &myfile)
 {
@@ -81,22 +29,16 @@ vvi EquiPartition(vi &vertex_set)
 	vertexMapGraph.resize(1);
 	edgeMapGraph.resize(1);
 	vertexWeight.resize(1);
-	// vvi tempVertexGraph;
-	// vvpi tempEdgeGraph;
 
-	// vi tempVertexCount(set_size,1);
 	vertexWeight[0].resize(set_size,1);
 	edgeMapGraph[0].resize(set_size);
 	vertexMapGraph[0].resize(set_size);
-	// tempVertexGraph.resize(set_size);
-	// tempEdgeGraph.resize(set_size);
 
 	map<int,int> m;
 	vi revMap(set_size,0);
 
 	for(int i=0;i<set_size;i++)
 	{
-		// tempVertexGraph[i].pb(vertex_set[i]);
 		vertexMapGraph[0][i].pb(vertex_set[i]);
 		m[vertex_set[i]]=i;
 		revMap[i]=vertex_set[i];
@@ -110,13 +52,8 @@ vvi EquiPartition(vi &vertex_set)
 				continue;
 			int neighbour=m[itr];
 			edgeMapGraph[0][i].pb({neighbour,1});
-			// tempEdgeGraph[i].pb({neighbour,1});
 		}
 	}
-
-	// vertexMapGraph.pb(tempVertexGraph);
-	// edgeMapGraph.pb(tempEdgeGraph);
-	// vertexWeight.pb(tempVertexCount);
 
 	int k=0;
 	// cout<<"****Coarsening*****"<<endl;
@@ -126,14 +63,7 @@ vvi EquiPartition(vi &vertex_set)
 		edgeMapGraph.resize(k+1);
 		vertexMapGraph.resize(k+1);
 		vertexWeight.resize(k+1);
-		// tempVertexGraph.resize(0);
-		// tempEdgeGraph.resize(0);
-		// tempVertexCount.resize(0);
 		coarsen(edgeMapGraph[k-1],vertexMapGraph[k-1],vertexWeight[k-1],edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k]);
-		// vertexMapGraph.pb(tempVertexGraph);
-		// edgeMapGraph.pb(tempEdgeGraph);
-		// vertexWeight.pb(tempVertexCount);
-		// cout<<k<<" "<<vertexMapGraph[k].size()<<endl;
 	}
 	vi partition1;
 	vi partition2;
@@ -155,16 +85,11 @@ vvi EquiPartition(vi &vertex_set)
 		partition2[i]=revMap[partition2[i]];	
 	finalPartition.pb(partition1);
 	finalPartition.pb(partition2);
-	// for(auto itr:finalPartition)
-	// {
-	// 	for(auto itr2:itr)
-	// 		cout<<itr2<<" ";
-	// 	cout<<endl;
-	// }
+
 	return finalPartition;
 }
 
-void solver(vi &vertex_set,int s,int e,vvi &finalPartitionList)
+void solver(vi &vertex_set,int s,int e,vvi &finalPartitionList,int numbPartitions)
 {
 	if(s==e)
 	{
@@ -185,16 +110,15 @@ void solver(vi &vertex_set,int s,int e,vvi &finalPartitionList)
 	}
 
 	int mid=(s+e)>>1;
-	int response=getMoreThreads(1);
-	#pragma omp parallel num_threads(1+response)
+	int open=1+(numbPartitions>1);
+	int refineP=max(1,(numbPartitions>>1));
+	#pragma omp parallel sections num_threads(open)
 	{
-		#pragma omp single nowait
-			solver(temp_partition[0],s,mid,finalPartitionList);
-		#pragma omp single nowait
-			solver(temp_partition[1],mid+1,e,finalPartitionList);			
+		#pragma omp section
+			solver(temp_partition[0],s,mid,finalPartitionList,refineP);
+		#pragma omp section
+			solver(temp_partition[1],mid+1,e,finalPartitionList,refineP);			
 	}
-	if(response)
-		freeThreads(response);
 	// cout<<"Exit Parallel"<<endl;
 }
 
@@ -203,6 +127,7 @@ int main(int argc,char **argv)
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	srand(time(NULL));
+	omp_set_nested(1);
 	FILE* _=freopen(argv[1],"r",stdin);
 	ofstream myfile;
 	myfile.open(argv[2]);
@@ -225,7 +150,7 @@ int main(int argc,char **argv)
 	vvi partitioned_graph;
 	partitioned_graph.resize(partitions);
 	// cout<<"Enter Solver"<<endl;
-	solver(vertex_set,0,partitions-1,partitioned_graph);
+	solver(vertex_set,0,partitions-1,partitioned_graph,availableThreads);
 	vi partition_numb(vertices+1,0);
 	// cout<<"Partitioned"<<endl;
 	int x=partitions;

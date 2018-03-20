@@ -1,7 +1,7 @@
 HEADER_DIR=.
 OBJDIR=obj
 LIBS=-std=c++11 -fopenmp
-SRCS=coarsening.cpp global_header.cpp partition.cpp gggp.cpp decoarseningSet.cpp
+SRCS=coarsening.cpp global_header.cpp partition.cpp gggp.cpp decoarseningSet.cpp utility.cpp
 DEPS = $(wildcard $(HEADER_DIR)/*.h)
 OBJS = $(patsubst %.cpp, $(OBJDIR)/%.o, $(SRCS))
 
@@ -22,6 +22,3 @@ clean:
 
 $(OBJDIR):
 	mkdir $(OBJDIR)
-
-# naive_partition:partition.cpp $(DEPS)
-# 	g++	$(LIBS) -I . partition.cpp -o $@

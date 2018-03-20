@@ -4,4 +4,4 @@ int vertices;
 int edges;
 int partitions;
 vector<vi>  graph;
-int availableThreads=THREAD_LIM-1;
+int availableThreads=THREAD_LIM;
