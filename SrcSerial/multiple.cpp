@@ -119,7 +119,7 @@ vvi EquiPartition(vi &vertex_set)
 	// vertexWeight.pb(tempVertexCount);
 	vi partition1_best;
 	vi partition2_best;
-	int min_cost=-1;
+	int min_cost=1e9;
 	// int cost=0;
 	for (int s=0;s<10;s++)
 	{	

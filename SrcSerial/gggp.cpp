@@ -1,6 +1,6 @@
 #include "global_header.h"
 
-void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &partition2)
+void gggp(int x,vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &partition2)
 {
 	// cout<<"Enter GGGP"<<endl;
 	set<pii,Comparator> dijkstra; 
@@ -8,7 +8,7 @@ void gggp(vvpi  &graph,vvi  &vector_set,vi &vertex_weight,vi &partition1,vi &par
 	int s=graph.size();
 	vector<int>  matching(s,0);
 	vector<int> gain(s,0);
-	int x=rand()%(s);
+	// int x=rand()%(s);
 	partition1.pb(x);
 	matching[x]=1;
 	partition_weight+=vertex_weight[x];

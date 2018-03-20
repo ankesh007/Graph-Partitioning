@@ -1,9 +1,12 @@
 #!/bin/bash
-subf=ignore/team36
+direc=ignore
+subf=team36
 sf=SrcSerial
-passwd=ignore/ACJGynwQ4w
+passwd=ACJGynwQ4w
 
-rm -rf $subf
-cp -r $sf $subf
-
+rm $direc/$passwd.zip
+cp -r $sf $direc/$subf
+cd ignore/
 zip -r $passwd.zip $subf
+rm -r $subf
+# zip -r $passwd.zip ../$sf/{*.{cpp,sh},Makefile}
