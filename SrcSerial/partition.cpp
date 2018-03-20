@@ -119,7 +119,7 @@ vvi EquiPartition(vi &vertex_set)
 	// vertexWeight.pb(tempVertexCount);
 
 	int k=0;
-	cout<<"****Coarsening*****"<<endl;
+	// cout<<"****Coarsening*****"<<endl;
 	while(k<ITERATIONS && vertexMapGraph[k].size()>VERTEX_SET_SIZE)
 	{
 		k=k+1;
@@ -133,17 +133,17 @@ vvi EquiPartition(vi &vertex_set)
 		// vertexMapGraph.pb(tempVertexGraph);
 		// edgeMapGraph.pb(tempEdgeGraph);
 		// vertexWeight.pb(tempVertexCount);
-		cout<<k<<" "<<vertexMapGraph[k].size()<<endl;
+		// cout<<k<<" "<<vertexMapGraph[k].size()<<endl;
 	}
 	vi partition1;
 	vi partition2;
 
 	gggp(edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k],partition1,partition2);
 
-	cout<<"****UnCoarsening*****"<<endl;
+	// cout<<"****UnCoarsening*****"<<endl;
 	for(int i=k-1;i>=0;i--)
 	{
-		cout<<i<<endl;
+		// cout<<i<<endl;
 		vi newPartition1,newPartition2;
 		decoarsen(vertexMapGraph[i+1],edgeMapGraph[i],vertexWeight[i],partition1,partition2,newPartition1,newPartition2);
 		partition1=newPartition1;
@@ -215,8 +215,8 @@ int main(int argc,char **argv)
 	}
 	parseInput();
 	// cout<<"Parsed Input"<<endl;
-	naiveSolution(myfile);
-	return 0;
+	// naiveSolution(myfile);
+	// return 0;
 	vi vertex_set;
 	vertex_set.resize(vertices);
 	for(int i=1;i<=vertices;i++)
@@ -237,7 +237,7 @@ int main(int argc,char **argv)
 			partition_numb[itr2]=i;
 			// cout<<itr2<<" ";
 		}
-			cout<<partitioned_graph[i].size()<<" ";
+			// cout<<partitioned_graph[i].size()<<" ";
 		// cout<<endl;
 	}
 	for(int i=1;i<=vertices;i++)
