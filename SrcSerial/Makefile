@@ -11,7 +11,7 @@ checker:checker.cpp $(DEPS)
 $(OBJDIR)/%.o: %.cpp $(DEPS) | $(OBJDIR)
 	g++ $(LIBS) -c -I . -o $@ $< -O3
 
-partition: $(OBJS) 
+partition: $(OBJS) | $(OBJDIR)
 	g++ $(LIBS) -I . $^ -o $@ -O3
 
 complete_mac:$(SRCS) $(DEPS)
