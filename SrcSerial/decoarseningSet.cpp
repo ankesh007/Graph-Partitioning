@@ -2,8 +2,8 @@
 
 int IDEAL_ITERATIONS=20;
 int KL_ITERATIONS=6;
-float disturbanceThresh=0.049;
-int ITERATION_LIM=1200;
+float disturbanceThresh=0.0495;
+int ITERATION_LIM=1100;
 
 // set<pii,Comparator> gainSet0,gainSet1;
 

@@ -2,7 +2,7 @@
    
 int ITERATIONS=100;
 int VERTEX_SET_SIZE=100;
-int RANDOM_ITERATIONS=2;
+int RANDOM_ITERATIONS=10;
 
 char temp[Maxn];
 
