@@ -5,8 +5,9 @@ sf=SrcSerial
 passwd=ACJGynwQ4w
 
 rm $direc/$passwd.zip
+rm -r $direc/$subf
 cp -r $sf $direc/$subf
-cd ignore/
-zip -r $passwd.zip $subf
-rm -r $subf
+cd ignore/$subf
+zip -r $passwd.zip *
+# rm -r $subf
 # zip -r $passwd.zip ../$sf/{*.{cpp,sh},Makefile}

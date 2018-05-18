@@ -1,6 +1,6 @@
 #include "global_header.h"
    
-int ITERATIONS=100;
+int ITERATIONS=10000;
 int VERTEX_SET_SIZE=100;
 int RANDOM_ITERATIONS=10;
 
@@ -56,72 +56,57 @@ vvi EquiPartition(vi &vertex_set)
 		}
 	}
 
-	vi partition1_best;
-	vi partition2_best;
 	int min_cost=1e9;
 
-	for(int r=0;r<RANDOM_ITERATIONS;r++)
+	int k=0;
+	// edgeMapGraph.resize(k+1);
+	// vertexMapGraph.resize(k+1);
+	// vertexWeight.resize(k+1);
+	int cs=clock();		
+	cout<<"****Coarsening*****"<<endl;
+	while(k<ITERATIONS && vertexMapGraph[k].size()>VERTEX_SET_SIZE)
 	{
-		int k=0;
+		k=k+1;
 		edgeMapGraph.resize(k+1);
 		vertexMapGraph.resize(k+1);
-		vertexWeight.resize(k+1);		
-		// cout<<"****Coarsening*****"<<endl;
-		while(k<ITERATIONS && vertexMapGraph[k].size()>VERTEX_SET_SIZE)
-		{
-			k=k+1;
-			edgeMapGraph.resize(k+1);
-			vertexMapGraph.resize(k+1);
-			vertexWeight.resize(k+1);
-			coarsen(edgeMapGraph[k-1],vertexMapGraph[k-1],vertexWeight[k-1],edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k]);
-		}
-		vi partition1;
-		vi partition2;
-
-		int vert=vertexMapGraph[k].size();
-		int random_node=rand()%vert;
-
-		gggp(random_node,edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k],partition1,partition2);
-
-		// cout<<"****UnCoarsening*****"<<endl;
-		for(int i=k-1;i>=0;i--)
-		{
-			// cout<<i<<endl;
-			vi newPartition1,newPartition2;
-			decoarsen(vertexMapGraph[i+1],edgeMapGraph[i],vertexWeight[i],partition1,partition2,newPartition1,newPartition2);
-			partition1=newPartition1;
-			partition2=newPartition2;
-		}
-
-		int ss=vertexMapGraph[0].size();
-		vi myPartition(ss,0);
-		for(int ii=0;ii<partition2.size();ii++)
-		{
-			myPartition[partition2[ii]]=1;
-		}
-		int cost=0;
-		for(int pi=0;pi<ss;pi++)
-		{
-			for(auto itr:edgeMapGraph[0][pi])
-			{
-				if(myPartition[itr.x]!=myPartition[pi])
-					cost++;
-			}
-		}
-		cout<<(cost/2)<<endl;
-		if(cost<min_cost){
-			min_cost=cost;
-			partition1_best=partition1;
-			partition2_best=partition2;
-		}
+		vertexWeight.resize(k+1);
+		coarsen(edgeMapGraph[k-1],vertexMapGraph[k-1],vertexWeight[k-1],edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k]);
 	}
+	int ce=clock();
+	cout<<ce-cs<<endl;
+	vi partition1;
+	vi partition2;
 
-	for(int i=0;i<partition1_best.size();i++)
-		partition1_best[i]=revMap[partition1_best[i]];
-	for(int i=0;i<partition2_best.size();i++)
-		partition2_best[i]=revMap[partition2_best[i]];	
-	finalPartition.pb(partition1_best);
-	finalPartition.pb(partition2_best);
+	int vert=vertexMapGraph[k].size();
+	int random_node=rand()%vert;
+
+	cout<<"GGGP"<<endl;
+	cs=clock();
+	gggp(random_node,edgeMapGraph[k],vertexMapGraph[k],vertexWeight[k],partition1,partition2);
+	ce=clock();
+	cout<<ce-cs<<endl;
+	cs=clock();
+	cout<<"****UnCoarsening*****"<<endl;
+	for(int i=k-1;i>=0;i--)
+	{
+		// cout<<i<<endl;
+		vi newPartition1,newPartition2;
+		decoarsen(vertexMapGraph[i+1],edgeMapGraph[i],vertexWeight[i],partition1,partition2,newPartition1,newPartition2);
+		partition1=newPartition1;
+		partition2=newPartition2;
+	}
+	ce=clock();
+	cout<<ce-cs<<endl;
+
+	int ss=vertexMapGraph[0].size();
+
+
+	for(int i=0;i<partition1.size();i++)
+		partition1[i]=revMap[partition1[i]];
+	for(int i=0;i<partition2.size();i++)
+		partition2[i]=revMap[partition2[i]];	
+	finalPartition.pb(partition1);
+	finalPartition.pb(partition2);
 
 	return finalPartition;
 }
